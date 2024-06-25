@@ -1,7 +1,6 @@
 DEFAULT_START_PORT=20000                         #默认起始端口
 DEFAULT_SOCKS_USERNAME="userb"                   #默认socks账号
 DEFAULT_SOCKS_PASSWORD="passwordb"               #默认socks密码
-
 DEFAULT_UUID=$(cat /proc/sys/kernel/random/uuid) #默认随机UUID
 
 IP_ADDRESSES=($(hostname -I))
@@ -51,8 +50,6 @@ config_xray() {
 	elif [ "$config_type" == "vmess" ]; then
 		read -p "UUID (默认随机): " UUID
 		UUID=${UUID:-$DEFAULT_UUID}
-		
-		
 	fi
 
 	for ((i = 0; i < ${#IP_ADDRESSES[@]}; i++)); do
@@ -72,8 +69,7 @@ config_xray() {
 			config_content+="[[inbounds.settings.clients]]\n"
 			config_content+="id = \"$UUID\"\n"
 			config_content+="[inbounds.streamSettings]\n"
-			config_content+="network = \"tcp\"\n"
-			
+			config_content+="network = \"tcp\"\n\n"
 		fi
 		config_content+="[[outbounds]]\n"
 		config_content+="sendThrough = \"${IP_ADDRESSES[i]}\"\n"
@@ -96,7 +92,6 @@ config_xray() {
 		echo "socks密码:$SOCKS_PASSWORD"
 	elif [ "$config_type" == "vmess" ]; then
 		echo "UUID:$UUID"
-		
 	fi
 	echo ""
 }
@@ -116,4 +111,3 @@ main() {
 		config_xray "socks"
 	fi
 }
-main "$@"
